@@ -132,18 +132,17 @@ int main() {
     VarianceCalculator calculator;
 
     // Add options to the calculator
-    calculator.addOption(Option(Option::Type::Call, 2000, 1.0, 1));
-    calculator.addOption(Option(Option::Type::Put, 3000, 0.5, -1));
-    calculator.addOption(Option(Option::Type::Call, 4000, 0.75, 1));
-    calculator.addOption(Option(Option::Type::Put, 5000, 0.25, -1));
-    calculator.addOption(Option(Option::Type::Call, 6000, 0.9, 1));
+    calculator.addOption(Option(Option::Type::Call, 2300, 1.0, 1));
 
-    // Get variance info
-    auto variance = calculator.getVarianceIfPurchased(Option(Option::Type::Put, 50, 1.0, -1));
-    std::cout << "Current Variance: " << variance.currentVariance << std::endl;
-    std::cout << "New Variance if Purchased: " << variance.newVariance << std::endl;
-    std::cout << "Variance Difference: " << (variance.newVariance - variance.currentVariance)*100 << std::endl;
+    // Hypothetical option purchase
+    Option hypotheticalOption(Option::Type::Call, 7000, 0.8, 1);
+
+    // Get variance if hypothetical option is purchased
+    VarianceCalculator::VarianceInfo varianceInfo = calculator.getVarianceIfPurchased(hypotheticalOption);
+
+    // Print the current and new variance
+    std::cout << "Current Variance: " << varianceInfo.currentVariance << std::endl;
+    std::cout << "New Variance: " << varianceInfo.newVariance << std::endl;
 
     return 0;
 }
-
