@@ -84,6 +84,7 @@ double VarianceCalculator::calculateOptionVariance(const Option& option) {
     double optionVariance = pow(delta, 2) * pow(underlyingStdDev, 2);
     return optionVariance;
 }
+#include <iostream>
 
 double VarianceCalculator::calculatePortfolioVariance() {
     double totalVariance = 0;
@@ -91,14 +92,17 @@ double VarianceCalculator::calculatePortfolioVariance() {
         double optionVariance = calculateOptionVariance(option);
         totalVariance += pow(option.position, 2) * optionVariance; // Assuming independence
     }
+    std::cout << "Calculated Portfolio Variance: " << totalVariance << std::endl;
     return totalVariance;
 }
 
-
 void VarianceCalculator::addOption(const Option& option) {
+    std::cout << "Portfolio size before adding: " << portfolio.size() << std::endl;
     portfolio.push_back(option);
     portfolioVariance = calculatePortfolioVariance();
+    std::cout << "Portfolio size after adding: " << portfolio.size() << std::endl;
 }
+
 
 void VarianceCalculator::resetPortfolio() {
     portfolio.clear();
@@ -128,13 +132,17 @@ int main() {
     VarianceCalculator calculator;
 
     // Add options to the calculator
-    calculator.addOption(Option(Option::Type::Call, 100, 1.0, 1));
-    calculator.addOption(Option(Option::Type::Put, 100, 1.0, -1));
+    calculator.addOption(Option(Option::Type::Call, 2000, 1.0, 1));
+    calculator.addOption(Option(Option::Type::Put, 3000, 0.5, -1));
+    calculator.addOption(Option(Option::Type::Call, 4000, 0.75, 1));
+    calculator.addOption(Option(Option::Type::Put, 5000, 0.25, -1));
+    calculator.addOption(Option(Option::Type::Call, 6000, 0.9, 1));
 
     // Get variance info
-    auto variance = calculator.getVarianceIfPurchased(Option(Option::Type::Call, 120, 1.0, 1));
+    auto variance = calculator.getVarianceIfPurchased(Option(Option::Type::Put, 50, 1.0, -1));
     std::cout << "Current Variance: " << variance.currentVariance << std::endl;
     std::cout << "New Variance if Purchased: " << variance.newVariance << std::endl;
+    std::cout << "Variance Difference: " << (variance.newVariance - variance.currentVariance)*100 << std::endl;
 
     return 0;
 }
